@@ -810,4 +810,7 @@ function binaryInsertionSort(arr) {
     visualizerPath: "/visualizers/sorting?algorithm=insertion",
     prevLesson: {
       slug: "selection-sort",
-      title
+      title: "Selection Sort"
+    }
+  }
+]
