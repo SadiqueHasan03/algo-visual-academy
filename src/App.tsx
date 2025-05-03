@@ -8,6 +8,7 @@ import { SignedIn, SignedOut } from "@clerk/clerk-react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Lessons from "./pages/Lessons";
+import LessonDetails from "./pages/LessonDetails";
 import Visualizers from "./pages/Visualizers";
 import SortingVisualizer from "./pages/SortingVisualizer";
 import SearchingVisualizer from "./pages/SearchingVisualizer";
@@ -37,6 +38,19 @@ const App = () => (
                   <>
                     <SignedIn>
                       <Lessons />
+                    </SignedIn>
+                    <SignedOut>
+                      <Navigate to="/login" replace />
+                    </SignedOut>
+                  </>
+                } 
+              />
+              <Route 
+                path="/lessons/:slug" 
+                element={
+                  <>
+                    <SignedIn>
+                      <LessonDetails />
                     </SignedIn>
                     <SignedOut>
                       <Navigate to="/login" replace />
