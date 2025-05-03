@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, BookOpen, Zap, Award, Code, Search, BarChart3, LineChart, Puzzle } from "lucide-react";
@@ -43,7 +42,7 @@ const Index = () => {
               
               {/* Card with animation */}
               <div className="bg-white rounded-xl shadow-lg border p-6 relative z-10">
-                <SortingVisualizer />
+                <SortingVisualizer algorithmType="bubble" />
               </div>
             </div>
           </div>
