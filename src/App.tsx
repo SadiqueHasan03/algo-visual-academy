@@ -3,7 +3,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { SignedIn, SignedOut } from "@clerk/clerk-react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Lessons from "./pages/Lessons";
@@ -30,12 +31,84 @@ const App = () => (
           <main className="flex-1 pt-16">
             <Routes>
               <Route path="/" element={<Index />} />
-              <Route path="/lessons" element={<Lessons />} />
-              <Route path="/visualizers" element={<Visualizers />} />
-              <Route path="/visualizers/sorting" element={<SortingVisualizer />} />
-              <Route path="/visualizers/searching" element={<SearchingVisualizer />} />
-              <Route path="/challenges" element={<Challenges />} />
-              <Route path="/quizzes" element={<Quizzes />} />
+              <Route 
+                path="/lessons" 
+                element={
+                  <>
+                    <SignedIn>
+                      <Lessons />
+                    </SignedIn>
+                    <SignedOut>
+                      <Navigate to="/login" replace />
+                    </SignedOut>
+                  </>
+                } 
+              />
+              <Route 
+                path="/visualizers" 
+                element={
+                  <>
+                    <SignedIn>
+                      <Visualizers />
+                    </SignedIn>
+                    <SignedOut>
+                      <Navigate to="/login" replace />
+                    </SignedOut>
+                  </>
+                }
+              />
+              <Route 
+                path="/visualizers/sorting" 
+                element={
+                  <>
+                    <SignedIn>
+                      <SortingVisualizer />
+                    </SignedIn>
+                    <SignedOut>
+                      <Navigate to="/login" replace />
+                    </SignedOut>
+                  </>
+                }
+              />
+              <Route 
+                path="/visualizers/searching" 
+                element={
+                  <>
+                    <SignedIn>
+                      <SearchingVisualizer />
+                    </SignedIn>
+                    <SignedOut>
+                      <Navigate to="/login" replace />
+                    </SignedOut>
+                  </>
+                }
+              />
+              <Route 
+                path="/challenges" 
+                element={
+                  <>
+                    <SignedIn>
+                      <Challenges />
+                    </SignedIn>
+                    <SignedOut>
+                      <Navigate to="/login" replace />
+                    </SignedOut>
+                  </>
+                }
+              />
+              <Route 
+                path="/quizzes" 
+                element={
+                  <>
+                    <SignedIn>
+                      <Quizzes />
+                    </SignedIn>
+                    <SignedOut>
+                      <Navigate to="/login" replace />
+                    </SignedOut>
+                  </>
+                }
+              />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="*" element={<NotFound />} />

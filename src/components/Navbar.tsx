@@ -10,11 +10,19 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
+import { SignedIn, SignedOut, UserButton, useClerk } from "@clerk/clerk-react";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { signOut } = useClerk();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-b border-border py-3">
@@ -96,14 +104,19 @@ const Navbar = () => {
         </nav>
 
         <div className="flex items-center gap-4">
-          <div className="hidden sm:flex items-center gap-2">
-            <Button variant="outline" asChild>
-              <Link to="/login">Login</Link>
-            </Button>
-            <Button asChild>
-              <Link to="/register">Sign Up</Link>
-            </Button>
-          </div>
+          <SignedIn>
+            <UserButton afterSignOutUrl="/" />
+          </SignedIn>
+          <SignedOut>
+            <div className="hidden sm:flex items-center gap-2">
+              <Button variant="outline" asChild>
+                <Link to="/login">Login</Link>
+              </Button>
+              <Button asChild>
+                <Link to="/register">Sign Up</Link>
+              </Button>
+            </div>
+          </SignedOut>
           
           {/* Mobile Menu Button */}
           <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
@@ -147,14 +160,23 @@ const Navbar = () => {
                   Quizzes
                 </Link>
               </li>
-              <li className="flex gap-4 mt-4">
-                <Button variant="outline" asChild className="flex-1">
-                  <Link to="/login" onClick={() => setIsOpen(false)}>Login</Link>
-                </Button>
-                <Button asChild className="flex-1">
-                  <Link to="/register" onClick={() => setIsOpen(false)}>Sign Up</Link>
-                </Button>
-              </li>
+              <SignedIn>
+                <li>
+                  <Button variant="outline" className="w-full mt-4" onClick={handleSignOut}>
+                    Sign Out
+                  </Button>
+                </li>
+              </SignedIn>
+              <SignedOut>
+                <li className="flex gap-4 mt-4">
+                  <Button variant="outline" asChild className="flex-1">
+                    <Link to="/login" onClick={() => setIsOpen(false)}>Login</Link>
+                  </Button>
+                  <Button asChild className="flex-1">
+                    <Link to="/register" onClick={() => setIsOpen(false)}>Sign Up</Link>
+                  </Button>
+                </li>
+              </SignedOut>
             </ul>
           </nav>
         </div>
