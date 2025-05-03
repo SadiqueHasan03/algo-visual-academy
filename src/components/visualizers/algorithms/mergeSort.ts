@@ -1,3 +1,4 @@
+
 import { Step } from '../types/sortingTypes';
 
 export function mergeSort(array: number[]): Step[] {

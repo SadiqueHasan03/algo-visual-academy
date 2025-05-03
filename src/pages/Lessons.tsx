@@ -17,11 +17,11 @@ const Lessons = () => {
       title: "Sorting Algorithms",
       description: "Master different techniques for sorting data efficiently.",
       lessons: [
-        { title: "Bubble Sort", slug: "bubble-sort" },
-        { title: "Selection Sort", slug: "selection-sort" },
-        { title: "Insertion Sort", slug: "insertion-sort" },
-        { title: "Merge Sort", slug: "merge-sort" },
-        { title: "Quick Sort", slug: "quick-sort" }
+        { title: "Bubble Sort", slug: "bubble-sort", visualizerPath: "/visualizers/sorting?algorithm=bubble" },
+        { title: "Selection Sort", slug: "selection-sort", visualizerPath: "/visualizers/sorting?algorithm=selection" },
+        { title: "Insertion Sort", slug: "insertion-sort", visualizerPath: "/visualizers/sorting?algorithm=insertion" },
+        { title: "Merge Sort", slug: "merge-sort", visualizerPath: "/visualizers/sorting?algorithm=merge" },
+        { title: "Quick Sort", slug: "quick-sort", visualizerPath: "/visualizers/sorting?algorithm=quick" }
       ]
     },
     {
@@ -57,9 +57,16 @@ const Lessons = () => {
               {category.lessons.map((lesson, lessonIndex) => (
                 <div key={lessonIndex} className="border rounded-lg p-4 bg-white">
                   <h3 className="font-medium mb-2">{lesson.title}</h3>
-                  <Button variant="outline" size="sm" asChild>
-                    <Link to={`/lessons/${lesson.slug}`}>Start Lesson</Link>
-                  </Button>
+                  <div className="flex gap-2 flex-wrap">
+                    <Button variant="outline" size="sm" asChild>
+                      <Link to={`/lessons/${lesson.slug}`}>Start Lesson</Link>
+                    </Button>
+                    {lesson.visualizerPath && (
+                      <Button variant="secondary" size="sm" asChild>
+                        <Link to={lesson.visualizerPath}>Try Visualizer</Link>
+                      </Button>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>

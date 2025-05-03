@@ -5,7 +5,7 @@ import { Slider } from "@/components/ui/slider";
 import { Play, Pause, SkipBack, SkipForward, Rainbow } from "lucide-react";
 import Bar from "./Bar";
 import { generateRandomArray } from "./utils/arrayUtils";
-import { bubbleSort, selectionSort, insertionSort } from "./algorithms";
+import { bubbleSort, selectionSort, insertionSort, mergeSort, quickSort } from "./algorithms";
 import { Step, SortingVisualizerProps } from "./types/sortingTypes";
 
 const SortingVisualizer = ({ algorithmType }: SortingVisualizerProps) => {
@@ -63,6 +63,12 @@ const SortingVisualizer = ({ algorithmType }: SortingVisualizerProps) => {
         case "insertion":
           sortingSteps = insertionSort([...array]);
           break;
+        case "merge":
+          sortingSteps = mergeSort([...array]);
+          break;
+        case "quick":
+          sortingSteps = quickSort([...array]);
+          break;
         default:
           sortingSteps = bubbleSort([...array]);
       }
@@ -96,6 +102,8 @@ const SortingVisualizer = ({ algorithmType }: SortingVisualizerProps) => {
       case "bubble": return "Bubble Sort";
       case "selection": return "Selection Sort";
       case "insertion": return "Insertion Sort";
+      case "merge": return "Merge Sort";
+      case "quick": return "Quick Sort";
       default: return "Bubble Sort";
     }
   };

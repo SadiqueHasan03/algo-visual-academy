@@ -17,8 +17,8 @@ const SortingVisualizerPage = () => {
           <TabsTrigger value="bubble">Bubble Sort</TabsTrigger>
           <TabsTrigger value="selection">Selection Sort</TabsTrigger>
           <TabsTrigger value="insertion">Insertion Sort</TabsTrigger>
-          <TabsTrigger value="merge" disabled>Merge Sort</TabsTrigger>
-          <TabsTrigger value="quick" disabled>Quick Sort</TabsTrigger>
+          <TabsTrigger value="merge">Merge Sort</TabsTrigger>
+          <TabsTrigger value="quick">Quick Sort</TabsTrigger>
         </TabsList>
         
         <TabsContent value="bubble" className="space-y-8">
@@ -211,8 +211,149 @@ end procedure`}
             </pre>
           </div>
         </TabsContent>
+
+        <TabsContent value="merge" className="space-y-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
+              <SortingVisualizer algorithmType="merge" />
+            </div>
+            
+            <div className="bg-white border rounded-lg p-6">
+              <h3 className="text-xl font-semibold mb-4">Merge Sort</h3>
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-medium mb-2">How it Works</h4>
+                  <p className="text-gray-600">
+                    Merge sort is a divide-and-conquer algorithm. It divides the input array into two halves,
+                    calls itself for the two halves, and then merges the two sorted halves. The merge step is
+                    the key operation where the sorted subarrays are combined.
+                  </p>
+                </div>
+                
+                <div>
+                  <h4 className="font-medium mb-2">Time Complexity</h4>
+                  <ul className="list-disc pl-5 space-y-1 text-gray-600">
+                    <li>Best Case: O(n log n)</li>
+                    <li>Average Case: O(n log n)</li>
+                    <li>Worst Case: O(n log n)</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h4 className="font-medium mb-2">Space Complexity</h4>
+                  <p className="text-gray-600">O(n) - Merge sort requires additional space for the merge step.</p>
+                </div>
+                
+                <div>
+                  <h4 className="font-medium mb-2">Use Cases</h4>
+                  <p className="text-gray-600">
+                    Merge sort is useful for sorting linked lists, external sorting, and when stable sorting is needed.
+                    It's particularly efficient for large datasets where O(n log n) performance is critical.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-white border rounded-lg p-6">
+            <h3 className="text-xl font-semibold mb-4">Pseudocode</h3>
+            <pre className="bg-gray-100 p-4 rounded-md overflow-auto">
+{`procedure mergeSort(A: list of sortable items)
+    if length(A) <= 1
+        return A
+    
+    middle = length(A) / 2
+    left = mergeSort(A[0...middle-1])
+    right = mergeSort(A[middle...length(A)-1])
+    
+    return merge(left, right)
+
+procedure merge(left, right: list of sortable items)
+    result = empty list
+    
+    while left is not empty and right is not empty
+        if first(left) <= first(right)
+            append first(left) to result
+            left = rest(left)
+        else
+            append first(right) to result
+            right = rest(right)
+    
+    append remaining items in left to result
+    append remaining items in right to result
+    
+    return result`}
+            </pre>
+          </div>
+        </TabsContent>
         
-        {/* Other tabs will be implemented later */}
+        <TabsContent value="quick" className="space-y-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
+              <SortingVisualizer algorithmType="quick" />
+            </div>
+            
+            <div className="bg-white border rounded-lg p-6">
+              <h3 className="text-xl font-semibold mb-4">Quick Sort</h3>
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-medium mb-2">How it Works</h4>
+                  <p className="text-gray-600">
+                    Quick sort is a divide-and-conquer algorithm. It works by selecting a 'pivot' element from the array
+                    and partitioning the other elements into two sub-arrays according to whether they are less than or greater
+                    than the pivot. The sub-arrays are then sorted recursively.
+                  </p>
+                </div>
+                
+                <div>
+                  <h4 className="font-medium mb-2">Time Complexity</h4>
+                  <ul className="list-disc pl-5 space-y-1 text-gray-600">
+                    <li>Best Case: O(n log n)</li>
+                    <li>Average Case: O(n log n)</li>
+                    <li>Worst Case: O(n²)</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h4 className="font-medium mb-2">Space Complexity</h4>
+                  <p className="text-gray-600">O(log n) - Quick sort requires space for the recursive call stack.</p>
+                </div>
+                
+                <div>
+                  <h4 className="font-medium mb-2">Use Cases</h4>
+                  <p className="text-gray-600">
+                    Quick sort is widely used for internal sorting and is often the algorithm of choice for many
+                    standard library implementations due to its efficiency on average. It performs well for arrays
+                    that fit in memory and is often faster in practice than other O(n log n) algorithms.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-white border rounded-lg p-6">
+            <h3 className="text-xl font-semibold mb-4">Pseudocode</h3>
+            <pre className="bg-gray-100 p-4 rounded-md overflow-auto">
+{`procedure quickSort(A: list of sortable items, lo, hi)
+    if lo < hi then
+        p = partition(A, lo, hi)
+        quickSort(A, lo, p - 1)
+        quickSort(A, p + 1, hi)
+
+procedure partition(A: list of sortable items, lo, hi)
+    pivot = A[hi]
+    i = lo - 1
+    
+    for j = lo to hi - 1 do
+        if A[j] < pivot then
+            i = i + 1
+            swap A[i] with A[j]
+    
+    swap A[i + 1] with A[hi]
+    return i + 1`}
+            </pre>
+          </div>
+        </TabsContent>
       </Tabs>
     </div>
   );

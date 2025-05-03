@@ -7,7 +7,7 @@ export interface Step {
 }
 
 export interface SortingVisualizerProps {
-  algorithmType: "bubble" | "selection" | "insertion";
+  algorithmType: "bubble" | "selection" | "insertion" | "merge" | "quick";
 }
 
 export interface BarProps {

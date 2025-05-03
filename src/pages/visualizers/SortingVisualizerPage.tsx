@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import SortingVisualizer from '@/components/visualizers/SortingVisualizer';
@@ -18,7 +19,7 @@ export default function SortingVisualizerPage() {
       </Tabs>
       
       <div className="max-w-4xl mx-auto">
-        <SortingVisualizer algorithmType={algorithmType} />
+        <SortingVisualizer algorithmType={algorithmType as "bubble" | "selection" | "insertion" | "merge" | "quick"} />
       </div>
     </div>
   );
