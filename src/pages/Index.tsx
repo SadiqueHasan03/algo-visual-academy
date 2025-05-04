@@ -190,7 +190,7 @@ const Index = () => {
                   Create Free Account
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="text-white border-white hover:bg-white/10" asChild>
+              <Button size="lg" variant="outline" className="text-black border border-white hover:bg-white/10" asChild>
                 <Link to="/lessons">
                   Browse Lessons
                 </Link>
