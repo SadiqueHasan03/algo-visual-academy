@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from "@/components/ui/label";
 import { Link, useNavigate } from "react-router-dom";
 import { useSignUp } from "@clerk/clerk-react";
-import { AlertCircle, Mail, User, Lock, GitHub, ChevronRight } from "lucide-react";
+import { AlertCircle, Mail, User, Lock, Github, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 
 const Register = () => {
@@ -212,7 +212,7 @@ const Register = () => {
               disabled={isLoading}
               className="flex items-center justify-center gap-2"
             >
-              <GitHub className="h-4 w-4" />
+              <Github className="h-4 w-4" />
               GitHub
             </Button>
           </div>

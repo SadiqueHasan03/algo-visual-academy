@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from "@/components/ui/label";
 import { Link, useNavigate } from "react-router-dom";
 import { useSignIn } from "@clerk/clerk-react";
-import { LogIn, AlertCircle, Mail, Lock, GitHub, ChevronRight } from "lucide-react";
+import { LogIn, AlertCircle, Mail, Lock, Github, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 
 const Login = () => {
@@ -177,7 +177,7 @@ const Login = () => {
               disabled={isLoading}
               className="flex items-center justify-center gap-2"
             >
-              <GitHub className="h-4 w-4" />
+              <Github className="h-4 w-4" />
               GitHub
             </Button>
           </div>
