@@ -15,7 +15,7 @@ export interface Quiz {
   title: string;
   description: string;
   topic: string;
-  difficulty: "beginner" | "intermediate" | "advanced";  // Added difficulty level
+  difficulty: "beginner" | "intermediate" | "advanced";
   questions: QuizQuestion[];
 }
 
@@ -25,6 +25,7 @@ export interface QuizProgress {
   score: number;
   totalQuestions: number;
   lastAttemptDate: string;
+  answers?: Record<string, string>; // Map of questionId -> selectedOptionId
 }
 
 export interface UserQuizProgress {

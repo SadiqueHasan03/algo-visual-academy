@@ -8,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getQuizProgressData, calculateTotalProgress } from "@/utils/quizProgress";
 import { fetchQuizzes } from "@/utils/simulateBackend";
 import { Quiz, UserQuizProgress } from "@/types/quiz";
+import { CheckCircle, Clock, ArrowRight, BarChart2 } from "lucide-react";
 
 const Quizzes = () => {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
@@ -44,32 +45,58 @@ const Quizzes = () => {
     return progressData[quizId] || null;
   };
 
+  const getDifficultyColor = (difficulty: string) => {
+    switch (difficulty) {
+      case "beginner":
+        return "beginner";
+      case "intermediate":
+        return "intermediate";
+      case "advanced":
+        return "advanced";
+      default:
+        return "beginner";
+    }
+  };
+
   return (
-    <div className="container py-12">
-      <div className="mb-8">
+    <div className="container py-12 animate-fade-in">
+      <div className="mb-8 max-w-3xl">
         <h1 className="text-4xl font-bold mb-4">Algorithm Quizzes</h1>
-        <p className="text-xl text-gray-600 mb-6">
-          Test your knowledge with multiple-choice quizzes to reinforce your learning.
+        <p className="text-xl text-muted-foreground mb-8">
+          Test your knowledge with interactive quizzes to reinforce your learning and track your progress.
         </p>
         
-        <div className="bg-white border rounded-lg p-6 mb-8 shadow-sm">
-          <div className="flex justify-between items-center mb-2">
-            <h2 className="text-lg font-medium">Your overall progress</h2>
+        <div className="bg-white dark:bg-gray-800 border rounded-xl p-6 mb-10 shadow-md">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+            <div>
+              <h2 className="text-xl font-semibold mb-1">Your Learning Journey</h2>
+              <p className="text-muted-foreground text-sm">Track your overall quiz progress</p>
+            </div>
             {isLoading ? (
               <Skeleton className="h-6 w-32" />
             ) : (
-              <span className="text-sm font-medium">
-                {overallProgress.completed} of {overallProgress.total} quizzes completed
-              </span>
+              <div className="flex items-center gap-2 bg-primary/10 text-primary px-3 py-1.5 rounded-lg">
+                <BarChart2 className="h-5 w-5" />
+                <span className="font-medium">
+                  {overallProgress.completed} of {overallProgress.total} completed
+                </span>
+              </div>
             )}
           </div>
           {isLoading ? (
             <Skeleton className="h-3 w-full" />
           ) : (
-            <Progress 
-              value={(overallProgress.completed / overallProgress.total) * 100} 
-              className="h-3"
-            />
+            <>
+              <Progress 
+                value={(overallProgress.completed / overallProgress.total) * 100} 
+                className="h-3 mb-2"
+              />
+              <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                <span>Just started</span>
+                <span>Halfway there</span>
+                <span>Completed</span>
+              </div>
+            </>
           )}
         </div>
       </div>
@@ -103,48 +130,63 @@ const Quizzes = () => {
             const scorePercentage = progress ? (progress.score / progress.totalQuestions) * 100 : 0;
             
             return (
-              <Card key={quiz.id} className="flex flex-col quiz-card hover:shadow-md transition-shadow duration-200">
+              <Card 
+                key={quiz.id} 
+                className={`flex flex-col quiz-card difficulty-${quiz.difficulty} hover:shadow-md transition-all duration-200 overflow-hidden`}
+              >
                 <CardHeader className="pb-2">
-                  <CardTitle>{quiz.title}</CardTitle>
+                  <div className="flex justify-between items-start mb-2">
+                    <CardTitle className="text-xl">{quiz.title}</CardTitle>
+                    <span className={`difficulty-badge ${getDifficultyColor(quiz.difficulty)}`}>
+                      {quiz.difficulty.charAt(0).toUpperCase() + quiz.difficulty.slice(1)}
+                    </span>
+                  </div>
                   <CardDescription>{quiz.description}</CardDescription>
                 </CardHeader>
                 <CardContent className="flex-grow quiz-card-content">
                   <div className="mb-4">
-                    <span className="text-sm font-medium px-2 py-1 bg-primary/10 text-primary rounded-full">{quiz.topic}</span>
+                    <span className="text-sm px-2.5 py-1 bg-primary/10 text-primary rounded-full">
+                      {quiz.topic}
+                    </span>
                   </div>
                   
                   {hasStarted && (
-                    <div className="mt-4">
+                    <div className="mt-5">
                       <div className="flex justify-between items-center text-sm mb-1">
-                        <span>Your progress</span>
+                        <span className="text-muted-foreground">Your progress</span>
                         <span className="font-medium">{Math.round(scorePercentage)}%</span>
                       </div>
                       <Progress value={scorePercentage} className="h-2" />
                       
                       {isCompleted && (
                         <p className="mt-3 text-sm text-green-600 font-medium flex items-center">
-                          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                          </svg>
+                          <CheckCircle className="w-4 h-4 mr-1.5" />
                           Completed on {new Date(progress.lastAttemptDate).toLocaleDateString()}
+                        </p>
+                      )}
+                      
+                      {hasStarted && !isCompleted && (
+                        <p className="mt-3 text-sm text-amber-600 font-medium flex items-center">
+                          <Clock className="w-4 h-4 mr-1.5" />
+                          In progress - continue where you left off
                         </p>
                       )}
                     </div>
                   )}
 
                   {!hasStarted && (
-                    <p className="text-sm text-gray-500 mt-4">You haven't taken this quiz yet.</p>
+                    <p className="text-sm text-muted-foreground mt-5 flex items-center">
+                      <span>You haven't taken this quiz yet</span>
+                    </p>
                   )}
                 </CardContent>
-                <CardFooter>
-                  <Button asChild className="w-full">
+                <CardFooter className="pt-2">
+                  <Button asChild className="w-full group">
                     <Link to={`/quizzes/${quiz.id}`} className="flex items-center justify-center">
                       {!hasStarted ? (
                         <>
                           Start Quiz
-                          <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                          </svg>
+                          <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
                         </>
                       ) : isCompleted ? 'Review Quiz' : 'Continue Quiz'}
                     </Link>

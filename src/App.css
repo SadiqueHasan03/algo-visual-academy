@@ -1,24 +1,31 @@
 
 .quiz-option {
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 .quiz-option:hover:not(.quiz-option-disabled) {
   border-color: hsl(var(--primary));
-  background-color: hsl(var(--primary) / 0.05);
+  background-color: hsl(var(--primary) / 0.08);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .quiz-result-summary {
   text-align: center;
-  padding: 1.5rem 0;
+  padding: 2rem 0;
+  animation: fadeIn 0.5s ease forwards;
 }
 
 .quiz-explanation {
-  background-color: rgba(59, 130, 246, 0.1);
+  background-color: rgba(59, 130, 246, 0.08);
   border: 1px solid rgba(59, 130, 246, 0.2);
-  border-radius: 0.375rem;
-  padding: 1rem;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
   margin-top: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  animation: fadeIn 0.5s ease forwards;
 }
 
 .quiz-card {
@@ -26,12 +33,14 @@
   display: flex;
   flex-direction: column;
   border-top: 4px solid transparent;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 .quiz-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 20px -3px rgba(0, 0, 0, 0.1), 0 4px 8px -2px rgba(0, 0, 0, 0.05);
 }
 
 .quiz-card-content {
@@ -41,9 +50,9 @@
 .quiz-progress-container {
   margin-bottom: 1.5rem;
   background-color: white;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  padding: 1.25rem 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 .quiz-next-button {
@@ -53,10 +62,89 @@
 
 /* Animation for new content */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
 
 .fade-in {
-  animation: fadeIn 0.5s ease forwards;
+  animation: fadeIn 0.6s ease forwards;
+}
+
+.scale-in {
+  animation: scaleIn 0.4s ease-out forwards;
+}
+
+/* Card accent colors based on difficulty */
+.difficulty-beginner {
+  border-top-color: #10B981; /* Green */
+}
+
+.difficulty-intermediate {
+  border-top-color: #F59E0B; /* Amber */
+}
+
+.difficulty-advanced {
+  border-top-color: #EF4444; /* Red */
+}
+
+/* Badge styles */
+.difficulty-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 9999px;
+  padding: 0.25rem 0.75rem;
+}
+
+.difficulty-badge.beginner {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #10B981;
+}
+
+.difficulty-badge.intermediate {
+  background-color: rgba(245, 158, 11, 0.1);
+  color: #F59E0B;
+}
+
+.difficulty-badge.advanced {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #EF4444;
+}
+
+/* Quiz option styling */
+.quiz-option.correct {
+  background-color: rgba(16, 185, 129, 0.1);
+  border-color: #10B981;
+}
+
+.quiz-option.incorrect {
+  background-color: rgba(239, 68, 68, 0.1);
+  border-color: #EF4444;
+}
+
+/* Page transitions */
+.page-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 400ms, transform 400ms;
+}
+
+.page-exit {
+  opacity: 1;
+}
+
+.page-exit-active {
+  opacity: 0;
+  transition: opacity 300ms;
 }

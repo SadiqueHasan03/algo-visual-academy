@@ -39,3 +39,49 @@ export const calculateTotalProgress = (): { completed: number; total: number } =
     total: quizIds.length
   };
 };
+
+export const clearQuizProgress = (quizId: string): void => {
+  const progressData = getQuizProgressData();
+  if (progressData[quizId]) {
+    delete progressData[quizId];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(progressData));
+  }
+};
+
+export const getCompletedQuizzes = (): string[] => {
+  const progressData = getQuizProgressData();
+  return Object.keys(progressData).filter(id => progressData[id].completed);
+};
+
+export const getUserPerformanceStats = (): { quizzesTaken: number; averageScore: number; bestScore: number } => {
+  const progressData = getQuizProgressData();
+  const quizIds = Object.keys(progressData);
+  
+  if (quizIds.length === 0) {
+    return {
+      quizzesTaken: 0,
+      averageScore: 0,
+      bestScore: 0
+    };
+  }
+  
+  const completedQuizzes = quizIds.filter(id => progressData[id].completed);
+  const scores = completedQuizzes.map(id => {
+    const { score, totalQuestions } = progressData[id];
+    return (score / totalQuestions) * 100;
+  });
+  
+  const averageScore = scores.length > 0 
+    ? scores.reduce((a, b) => a + b, 0) / scores.length 
+    : 0;
+  
+  const bestScore = scores.length > 0 
+    ? Math.max(...scores) 
+    : 0;
+  
+  return {
+    quizzesTaken: completedQuizzes.length,
+    averageScore: Math.round(averageScore),
+    bestScore: Math.round(bestScore)
+  };
+};
