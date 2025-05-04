@@ -6,8 +6,9 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
-import { Check, ArrowLeft, ArrowRight } from "lucide-react";
-import { quizzes } from "@/data/quizzes";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Check, ArrowLeft, ArrowRight, AlertCircle, CheckCircle } from "lucide-react";
+import { fetchQuizById } from "@/utils/simulateBackend";
 import { Quiz, QuizQuestion } from "@/types/quiz";
 import { saveQuizProgress, getQuizProgress } from "@/utils/quizProgress";
 import { useToast } from "@/hooks/use-toast";
@@ -25,23 +26,41 @@ const QuizDetails = () => {
   const [isComplete, setIsComplete] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [score, setScore] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (quizId) {
-      const foundQuiz = quizzes.find(q => q.id === quizId);
-      if (foundQuiz) {
-        setQuiz(foundQuiz);
+    const loadQuiz = async () => {
+      if (!quizId) return;
+      
+      setLoading(true);
+      try {
+        const fetchedQuiz = await fetchQuizById(quizId);
         
-        // Check if there's saved progress
-        const progress = getQuizProgress(quizId);
-        if (progress && progress.completed) {
-          setIsComplete(true);
+        if (fetchedQuiz) {
+          setQuiz(fetchedQuiz);
+          
+          // Check if there's saved progress
+          const progress = getQuizProgress(quizId);
+          if (progress && progress.completed) {
+            setIsComplete(true);
+          }
+        } else {
+          navigate("/quizzes", { replace: true });
         }
-      } else {
-        navigate("/quizzes", { replace: true });
+      } catch (error) {
+        console.error("Error loading quiz:", error);
+        toast({
+          title: "Error loading quiz",
+          description: "There was a problem loading this quiz. Please try again later.",
+          variant: "destructive"
+        });
+      } finally {
+        setLoading(false);
       }
-    }
-  }, [quizId, navigate]);
+    };
+    
+    loadQuiz();
+  }, [quizId, navigate, toast]);
 
   const currentQuestion = quiz?.questions[currentQuestionIndex];
   
@@ -102,7 +121,7 @@ const QuizDetails = () => {
     
     setScore(correctAnswers);
     
-    // Save progress to localStorage
+    // Save progress to localStorage and simulated backend
     saveQuizProgress({
       quizId: quiz.id,
       completed: true,
@@ -137,10 +156,67 @@ const QuizDetails = () => {
     return currentQuestion ? userAnswers[currentQuestion.id] : null;
   };
 
+  if (loading) {
+    return (
+      <div className="container py-12">
+        <Button 
+          variant="outline" 
+          onClick={() => navigate("/quizzes")}
+          className="mb-6"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" /> Back to Quizzes
+        </Button>
+        
+        <div className="mb-6">
+          <Skeleton className="h-10 w-3/4 mb-2" />
+          <Skeleton className="h-5 w-1/2" />
+        </div>
+        
+        <div className="mb-6">
+          <div className="flex justify-between items-center mb-2">
+            <Skeleton className="h-4 w-40" />
+            <Skeleton className="h-4 w-32" />
+          </div>
+          <Skeleton className="h-2 w-full" />
+        </div>
+        
+        <Card className="mb-6">
+          <CardHeader>
+            <Skeleton className="h-6 w-full" />
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="flex items-center space-x-2 rounded-md border p-4">
+                  <Skeleton className="h-4 w-4" />
+                  <Skeleton className="h-4 w-full" />
+                </div>
+              ))}
+            </div>
+          </CardContent>
+          <CardFooter className="flex justify-between">
+            <div>
+              <Skeleton className="h-10 w-24" />
+            </div>
+            <div>
+              <Skeleton className="h-10 w-32" />
+            </div>
+          </CardFooter>
+        </Card>
+      </div>
+    );
+  }
+
   if (!quiz) {
     return (
       <div className="container py-12 text-center">
-        <p>Loading quiz...</p>
+        <p>Quiz not found</p>
+        <Button 
+          onClick={() => navigate("/quizzes")}
+          className="mt-4"
+        >
+          Return to Quizzes
+        </Button>
       </div>
     );
   }
@@ -162,7 +238,7 @@ const QuizDetails = () => {
       
       {!isComplete && (
         <>
-          <div className="mb-6">
+          <div className="quiz-progress-container">
             <div className="flex justify-between items-center mb-2">
               <span className="text-sm font-medium">
                 Question {currentQuestionIndex + 1} of {quiz.questions.length}
@@ -175,7 +251,7 @@ const QuizDetails = () => {
           </div>
           
           {currentQuestion && (
-            <Card className="mb-6">
+            <Card className="mb-6 shadow-sm border-t-4 border-t-primary">
               <CardHeader>
                 <CardTitle className="text-xl">{currentQuestion.text}</CardTitle>
               </CardHeader>
@@ -195,7 +271,7 @@ const QuizDetails = () => {
                     return (
                       <div
                         key={option.id}
-                        className={`flex items-center space-x-2 rounded-md border p-4 ${
+                        className={`flex items-center space-x-2 rounded-md border p-4 quiz-option ${
                           showExplanation && isCorrect
                             ? "border-green-500 bg-green-50"
                             : showCorrectness && !isCorrect
@@ -203,7 +279,7 @@ const QuizDetails = () => {
                             : isSelected
                             ? "border-primary"
                             : ""
-                        }`}
+                        } ${showExplanation ? "quiz-option-disabled" : ""}`}
                       >
                         <RadioGroupItem value={option.id} id={option.id} />
                         <label
@@ -221,8 +297,11 @@ const QuizDetails = () => {
                 </RadioGroup>
                 
                 {showExplanation && (
-                  <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-md">
-                    <h3 className="font-medium mb-1">Explanation:</h3>
+                  <div className="quiz-explanation">
+                    <h3 className="font-medium mb-1 flex items-center">
+                      <AlertCircle className="h-4 w-4 mr-2 text-primary" />
+                      Explanation:
+                    </h3>
                     <p className="text-sm">{currentQuestion.explanation}</p>
                   </div>
                 )}
@@ -248,13 +327,15 @@ const QuizDetails = () => {
                       Check Answer
                     </Button>
                   ) : (
-                    <Button onClick={handleNextQuestion}>
+                    <Button onClick={handleNextQuestion} className="quiz-next-button">
                       {currentQuestionIndex < quiz.questions.length - 1 ? (
                         <>
                           Next <ArrowRight className="ml-2 h-4 w-4" />
                         </>
                       ) : (
-                        "Finish Quiz"
+                        <>
+                          Finish Quiz <CheckCircle className="ml-2 h-4 w-4" />
+                        </>
                       )}
                     </Button>
                   )}
@@ -274,7 +355,7 @@ const QuizDetails = () => {
             </DialogDescription>
           </DialogHeader>
           
-          <div className="py-4">
+          <div className="py-4 quiz-result-summary">
             <h3 className="text-center text-2xl font-bold mb-2">
               {score} / {quiz.questions.length}
             </h3>

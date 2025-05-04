@@ -1,9 +1,10 @@
 
 import { UserQuizProgress, QuizProgress } from "../types/quiz";
+import { saveQuizProgressToBackend } from "./simulateBackend";
 
 const STORAGE_KEY = "algorithmLearner_quizProgress";
 
-export const saveQuizProgress = (progress: QuizProgress): void => {
+export const saveQuizProgress = async (progress: QuizProgress): Promise<void> => {
   const currentProgress = getQuizProgressData();
   
   const updatedProgress = {
@@ -12,6 +13,9 @@ export const saveQuizProgress = (progress: QuizProgress): void => {
   };
   
   localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedProgress));
+  
+  // Simulate sending to backend
+  await saveQuizProgressToBackend(progress);
 };
 
 export const getQuizProgressData = (): UserQuizProgress => {

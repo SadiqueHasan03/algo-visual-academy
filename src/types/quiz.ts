@@ -15,6 +15,7 @@ export interface Quiz {
   title: string;
   description: string;
   topic: string;
+  difficulty: "beginner" | "intermediate" | "advanced";  // Added difficulty level
   questions: QuizQuestion[];
 }
 
