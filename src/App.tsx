@@ -14,6 +14,7 @@ import SortingVisualizer from "./pages/SortingVisualizer";
 import SearchingVisualizer from "./pages/SearchingVisualizer";
 import Challenges from "./pages/Challenges";
 import Quizzes from "./pages/Quizzes";
+import QuizDetails from "./pages/QuizDetails";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Navbar from "./components/Navbar";
@@ -116,6 +117,19 @@ const App = () => (
                   <>
                     <SignedIn>
                       <Quizzes />
+                    </SignedIn>
+                    <SignedOut>
+                      <Navigate to="/login" replace />
+                    </SignedOut>
+                  </>
+                }
+              />
+              <Route 
+                path="/quizzes/:quizId" 
+                element={
+                  <>
+                    <SignedIn>
+                      <QuizDetails />
                     </SignedIn>
                     <SignedOut>
                       <Navigate to="/login" replace />
